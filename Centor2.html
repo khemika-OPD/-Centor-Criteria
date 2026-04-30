@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centor Criteria - OPD Takhli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary-blue: #007bff; 
+            --dark-border: #000000;
+            --soft-pink: #fff0f3;
+        }
+        
+        body { 
+            font-family: 'Sarabun', sans-serif; 
+            background-color: var(--soft-pink); 
+            margin: 0; padding: 10px; 
+            display: flex; justify-content: center;
+        }
+        
+        .main-card { 
+            max-width: 850px; width: 100%; 
+            background: #ffffff; 
+            border-radius: 20px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3); 
+            overflow: hidden;
+            border: 4px solid var(--dark-border);
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: White;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            border-bottom: 4px solid var(--dark-border);
+        }
+
+        /* ส่วนแสดงรูปภาพ */
+        .nurse-img {
+            width: 70px;
+            height: auto;
+            border-radius: 15px;
+            border: 2px solid Black;
+            background: Violet;
+        }
+
+        .header-text h1 { margin: 0; font-size: 1.5rem; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        .header-text p { margin: 2px 0; font-size: 0.95rem; font-weight: 700; }
+
+        .flex-body { display: flex; flex-wrap: wrap; }
+        .left-panel { flex: 1.2; min-width: 300px; padding: 20px; border-right: 2px solid #eee; }
+        .right-panel { flex: 1; min-width: 300px; padding: 20px; }
+
+        .section-label { 
+            font-weight: 700; color: #003399; 
+            margin-bottom: 12px; display: block;
+            border-bottom: 3px solid var(--dark-border);
+            padding-bottom: 5px;
+        }
+        
+        .input-item { 
+            background: #ffffff; border: 1px solid #ccc; 
+            padding: 12px; border-radius: 10px; 
+            margin-bottom: 10px; display: flex; align-items: center; 
+            cursor: pointer; font-weight: 700; transition: 0.2s;
+        }
+        .input-item:hover { background: #f0f4ff; border-color: #007bff; }
+        .input-item input { width: 22px; height: 22px; margin-right: 12px; accent-color: #007bff; }
+
+        select { 
+            width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #ccc; 
+            font-family: 'Sarabun'; margin-bottom: 15px; font-weight: 700; font-size: 1.1rem;
+        }
+
+        .score-display { 
+            text-align: center; padding: 20px; border-radius: 20px; color: White; 
+            border: 4px solid var(--dark-border); margin-bottom: 15px;
+        }
+        .score-num { font-size: 5rem; font-weight: 700; line-height: 1; }
+        
+        .result-box { 
+            background: white; padding: 15px; border-radius: 15px; border: 2px solid #ddd;
+            font-size: 1.1rem; line-height: 1.6;
+        }
+
+        .reset-btn {
+            width: 100%; padding: 15px; background: #333; color: white;
+            border: none; border-radius: 10px; cursor: pointer; 
+            font-family: 'Sarabun'; font-weight: 700; font-size: 1.1rem;
+        }
+        .reset-btn:hover { background: #000; }
+
+        @media (max-width: 600px) { .left-panel { border-right: none; } }
+    </style>
+</head>
+<body>
+
+<div class="main-card">
+    <div class="header-section">
+        <img src="https://img5.pic.in.th/file/secure-sv1/Gemini_Generated_Image_Gemini_Generated_Image_fu6bpifu6bpifu6b.png" alt="Nurse" class="nurse-img">
+        <div class="header-text">
+            <h1>Centor Criteria Calculator</h1>
+            <p>OPD รพ.ตาคลี</p>
+            <p style="font-weight: 400; font-size: 0.85rem;">โดยเขมิกา พงษ์ศรี/พยาบาล(29/4/2569)</p>
+        </div>
+    </div>
+
+    <div class="flex-body">
+        <div class="left-panel">
+            <span class="section-label">📋 ประเมินอาการ (+1)</span>
+            <label class="input-item"><input type="checkbox" class="chk" onchange="calc()"><span>มีไข้ (> 38°C)</span></label>
+            <label class="input-item"><input type="checkbox" class="chk" onchange="calc()"><span>ไม่มีอาการไอ</span></label>
+            <label class="input-item"><input type="checkbox" class="chk" onchange="calc()"><span>ทอนซิลบวม/มีหนอง</span></label>
+            <label class="input-item"><input type="checkbox" class="chk" onchange="calc()"><span>ต่อมน้ำเหลืองโต/กดเจ็บ</span></label>
+
+            <span class="section-label" style="margin-top:20px;">📅 ช่วงอายุ (McIsaac)</span>
+            <select id="age" onchange="calc()">
+                <option value="1">3 - 14 ปี (+1)</option>
+                <option value="0" selected>15 - 44 ปี (0)</option>
+                <option value="-1">45 ปีขึ้นไป (-1)</option>
+            </select>
+            <button class="reset-btn" onclick="resetAll()">ล้างข้อมูลใหม่</button>
+        </div>
+
+        <div class="right-panel">
+            <div id="cardColor" class="score-display" style="background-color: #27ae60;">
+                <div style="font-size: 1.2rem; font-weight: 700;">คะแนนรวม</div>
+                <div class="score-num" id="displayScore">0</div>
+                <div id="riskLevel" style="font-weight: 700; font-size: 1.5rem;">ความเสี่ยงต่ำ</div>
+            </div>
+
+            <div class="result-box">
+                <b>🏥 การจัดการ:</b>
+                <div id="rxPlan">รักษาตามอาการ ไม่ต้องใช้ Antibiotic</div>
+                <hr style="border: 0.5px solid #eee; margin: 30px 0;">
+                <b>🧪 ส่งตรวจ Lab:</b>
+                <div id="labPlan">ไม่ต้องส่งตรวจเชื้อ</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calc() {
+        let s = 0;
+        document.querySelectorAll('.chk:checked').forEach(c => s++);
+        s += parseInt(document.getElementById('age').value);
+
+        const card = document.getElementById('cardColor');
+        const scoreTxt = document.getElementById('displayScore');
+        const riskTxt = document.getElementById('riskLevel');
+        const rx = document.getElementById('rxPlan');
+        const lab = document.getElementById('labPlan');
+
+        scoreTxt.innerText = s;
+
+        if (s <= 1) {
+            card.style.backgroundColor = "#27ae60"; // เขียว
+            riskTxt.innerText = "ความเสี่ยงต่ำ";
+            rx.innerText = "รักษาตามอาการ ไม่ต้องใช้ Antibiotic";
+            lab.innerText = "ไม่ต้องส่งตรวจเชื้อ";
+        } else if (s <= 3) {
+            card.style.backgroundColor = "#f39c12"; // ส้ม
+            riskTxt.innerText = "ความเสี่ยงปานกลาง";
+            rx.innerText = "พิจารณาให้ยาตามผลตรวจ Lab";
+            lab.innerText = "แนะนำส่ง Rapid Test หรือ Culture";
+        } else {
+            card.style.backgroundColor = "#d63031"; // แดง
+            riskTxt.innerText = "ความเสี่ยงสูง";
+            rx.innerText = "พิจารณาให้ยาปฏิชีวนะ (Antibiotics)";
+            lab.innerText = "สามารถให้ยาได้ทันที";
+        }
+    }
+
+    function resetAll() {
+        document.querySelectorAll('.chk').forEach(c => c.checked = false);
+        document.getElementById('age').value = "0";
+        calc();
+    }
+</script>
+<!-- ส่วนแสดง QR Code สำหรับแชร์ต่อ -->
+<div style="margin-top: 20px; padding: 20px; border: 2px dashed #ccc; border-radius: 15px; text-align: center;">
+    <button class="reset-btn" style="background-color: #007bff; margin-bottom: 15px;" onclick="makeQR()">
+        สร้าง QR Code สำหรับแชร์แอปนี้
+    </button>
+    <div id="qrcode_canvas" style="display: flex; justify-content: center;"></div>
+    <p id="url_text" style="font-size: 0.8rem; color: #666; margin-top: 10px;"></p>
+</div>
+
+<!-- ดึง Library สำหรับสร้าง QR Code -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+    function makeQR() {
+        // ล้างพื้นที่เดิม
+        const qrArea = document.getElementById("qrcode_canvas");
+        qrArea.innerHTML = "";
+        
+        // ดึง URL ปัจจุบันที่แอปกำลังรันอยู่
+        const currentUrl = window.location.href;
+        document.getElementById("url_text").innerText = "Link: " + currentUrl;
+
+        // สร้าง QR Code
+        new QRCode(qrArea, {
+            text: currentUrl,
+            width: 128,
+            height: 128,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    }
+</script>
+</body>
+</html>
